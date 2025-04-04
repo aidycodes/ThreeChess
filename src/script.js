@@ -2,9 +2,9 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import gsap from "gsap";
 import GUI from "lil-gui";
-import { createQueen } from "./queen.js";
-import { createPawn } from "./pawn.js";
-import { createKing } from "./king.js";
+import { createPawn } from "./peices/pawn.js";
+import { createBoard } from "./board.js";
+import { createPeices } from "./corePeices.js";
 
 //debugger / tweeker
 const gui = new GUI({
@@ -45,15 +45,6 @@ const directionalLight = new THREE.DirectionalLight(0xffffff, 5);
 
 scene.add(directionalLight);
 
-const whiteQueen = createQueen("white");
-
-scene.add(whiteQueen);
-
-const whitePawn = createPawn("white");
-scene.add(whitePawn);
-
-const whiteKing = createKing("white");
-scene.add(whiteKing);
 /**
  * Sizes
  */
@@ -103,6 +94,29 @@ const renderer = new THREE.WebGLRenderer({
 });
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const board = createBoard();
+scene.add(board);
+
+console.log(board);
+
+for (let i = 0; i < 8; i++) {
+  const whitePawn = createPawn("white");
+  console.log({ i });
+  scene.add(whitePawn);
+  whitePawn.position.x = board.children[8 + i].position.x;
+  whitePawn.position.z = board.children[8 + i].position.z;
+}
+for (let i = 55; i > 47; i--) {
+  const whitePawn = createPawn("black");
+  console.log({ i });
+  scene.add(whitePawn);
+  whitePawn.position.x = board.children[i].position.x;
+  whitePawn.position.z = board.children[i].position.z;
+}
+
+const { whitePeices, blackPeices } = createPeices(board, scene);
 
 /**
  * Animate
