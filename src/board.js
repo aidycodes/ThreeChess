@@ -21,22 +21,29 @@ export function createBoard() {
   const material1 = new THREE.MeshStandardMaterial({
     color: "white",
     side: THREE.DoubleSide,
-    aoMap: ARMTexture,
-    roughness: ARMTexture,
-    normalMap: normTexture,
-    roughnessMap: ARMTexture,
-    map: colorTexture,
+    transparent: true,
+    opacity: 0,
   });
 
   const material2 = new THREE.MeshStandardMaterial({
-    color: "#0A0A0A",
+    color: "black",
     side: THREE.DoubleSide,
-    aoMap: ARMTexture,
-    roughness: ARMTexture,
-    normalMap: normTexture,
-    roughnessMap: ARMTexture,
-    map: colorTexture,
+    transparent: true,
+    opacity: 0.9,
   });
+
+  // [colorTexture, ARMTexture, dispTexture].forEach((texture) => {
+  //   texture.colorSpace = THREE.SRGBColorSpace;
+  //   texture.wrapS = THREE.RepeatWrapping;
+  //   texture.wrapT = THREE.RepeatWrapping;
+  //   //texture.colorSpace = THREE.SRGBColorSpace;
+
+  //   // Set different repeat values for sides vs top/bottom
+  //   //texture.repeat.set(0.0625, 0.0625); // Different ratio for Y dimension
+
+  //   // Prevent texture stretching
+  //   texture.anisotropy = 16; // Depends on your renderer's capabilities
+  // });
 
   const tileGeometry = new THREE.PlaneGeometry(1.5, 1.5);
 
