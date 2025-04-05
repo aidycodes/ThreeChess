@@ -79,5 +79,10 @@ export function createBishop(color) {
   result.position.y = 0;
   bishop.add(result);
 
+  for (const part of bishop.children) {
+    part.castShadow = true;
+    part.receiveShadow = true;
+  }
+
   return bishop;
 }

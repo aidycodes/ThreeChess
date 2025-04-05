@@ -20,24 +20,29 @@ export function createPeices(board, scene) {
   let blackPeices = {};
   let whitePeices = {};
   for (let peice in peices) {
+    //create back  rows
     whitePeices[peice] = peices[peice]("white");
-    whitePeices[peice].position.z = board.children[0].position.z;
-    whitePeices[peice].position.x =
-      board.children[Object.keys(whitePeices).length - 1].position.x;
+    whitePeices[peice].position.z = 0;
+    whitePeices[peice].position.x = 1.5 * Object.keys(whitePeices).length - 1.5;
 
     blackPeices[peice] = peices[peice]("black");
     blackPeices[peice].rotation.y = Math.PI;
-    blackPeices[peice].position.z = board.children[63].position.z;
-    blackPeices[peice].position.x =
-      board.children[Object.keys(blackPeices).length - 1].position.x;
-    console.log(Object.keys(blackPeices).length);
+    blackPeices[peice].position.z = 1.5 * 7;
+    blackPeices[peice].position.x = 1.5 * Object.keys(blackPeices).length - 1.5;
 
     scene.add(whitePeices[peice]);
     scene.add(blackPeices[peice]);
-
-    console.log({ peice });
   }
-  console.log(whitePeices);
+  for (let i = 0; i < 8; i++) {
+    // create pawn rows
+    const whitePawn = createPawn("white");
+    const blackPawn = createPawn("black");
+    whitePawn.position.x = 1.5 * i;
+    whitePawn.position.z = 1.5;
+    blackPawn.position.x = 1.5 * i;
+    blackPawn.position.z = 1.5 * 6;
+    scene.add(whitePawn, blackPawn);
+  }
 
   return { whitePeices, blackPeices };
 }

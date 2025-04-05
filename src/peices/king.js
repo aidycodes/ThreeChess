@@ -53,5 +53,10 @@ export function createKing(color) {
   horozontalMesh.position.y += 0.05;
   cross.add(horozontalMesh);
 
+  for (const part of king.children) {
+    part.castShadow = true;
+    part.receiveShadow = true;
+  }
+
   return king;
 }

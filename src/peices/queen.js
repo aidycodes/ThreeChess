@@ -58,6 +58,10 @@ export function createQueen(color) {
   const headMesh = new THREE.Mesh(headGeomtry, material);
   headMesh.position.y = 1.7;
   queen.add(headMesh);
+  for (const part of queen.children) {
+    part.castShadow = true;
+    part.receiveShadow = true;
+  }
 
   return queen;
 }

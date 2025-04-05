@@ -6,5 +6,8 @@ export function peiceBase(material) {
     material
   );
 
+  base.castShadow = true;
+  base.receiveShadow = true;
+
   return base;
 }

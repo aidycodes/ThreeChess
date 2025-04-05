@@ -69,6 +69,10 @@ export function createRook(color) {
 
     crenellations.add(crenellation1);
   }
+  for (const part of rook.children) {
+    part.castShadow = true;
+    part.receiveShadow = true;
+  }
 
   return rook;
 }

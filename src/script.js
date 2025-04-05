@@ -1,8 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import gsap from "gsap";
 import GUI from "lil-gui";
-import { createPawn } from "./peices/pawn.js";
 import { createBoard } from "./board.js";
 import { createPeices } from "./corePeices.js";
 
@@ -38,12 +36,76 @@ const scene = new THREE.Scene();
  */
 //debugObject.color = "#e3b7b7";
 
-const ambientLight = new THREE.AmbientLight(0xffffff, 5);
+const ambientLightParams = {
+  color: "#ffffff",
+  intensity: 3.5,
+};
+const directionalLightParams = {
+  color: "#fffffa",
+  intensity: 10,
+};
+const ambientLight = new THREE.AmbientLight(
+  ambientLightParams.color,
+  ambientLightParams.intensity
+);
 scene.add(ambientLight);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 5);
+const directionalLight = new THREE.DirectionalLight(
+  directionalLightParams.color,
+  directionalLightParams.intensity
+);
+directionalLight.castShadow = true;
+
+directionalLight.shadow.mapSize.width = 2048;
+directionalLight.shadow.mapSize.height = 2048;
+
+directionalLight.shadow.camera.left = -10;
+directionalLight.shadow.camera.right = 10;
+directionalLight.shadow.camera.top = 10;
+directionalLight.shadow.camera.bottom = -10;
+directionalLight.shadow.camera.near = 0.5;
+directionalLight.shadow.camera.far = 50;
+
+const lightHelper = new THREE.DirectionalLightHelper(directionalLight, 1);
+scene.add(lightHelper);
 
 scene.add(directionalLight);
+directionalLight.position.x = -2.146;
+const ambientLightFolder = gui.addFolder("Ambient Lighting");
+const directionalLightFolder = gui.addFolder("directional  Light");
+const cameraFolder = gui.addFolder("Camera");
+ambientLightFolder
+  .addColor(ambientLightParams, "color")
+  .name("Color")
+  .onChange((value) => ambientLight.color.set(value));
+
+directionalLightFolder
+  .addColor(directionalLight, "color")
+  .name("Color")
+  .onChange((value) => directionalLight.color.set(value));
+
+directionalLightFolder
+  .add(directionalLight, "intensity")
+  .min(-10)
+  .max(50)
+  .step(0.001);
+
+ambientLightFolder.add(ambientLight, "intensity").min(-10).max(50).step(0.001);
+directionalLightFolder
+  .add(directionalLight.position, "x")
+  .min(-10)
+  .max(50)
+  .step(0.001);
+directionalLightFolder
+  .add(directionalLight.position, "z")
+  .min(-10)
+  .max(50)
+  .step(0.001);
+directionalLightFolder
+  .add(directionalLight.position, "y")
+  .min(-10)
+  .max(50)
+  .step(0.001);
 
 /**
  * Sizes
@@ -77,9 +139,15 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   100
 );
-camera.position.x = 1;
-camera.position.y = 1;
-camera.position.z = 2;
+camera.position.y = 3.767;
+camera.position.x = 17.207;
+camera.position.z = 8;
+camera.rotation.y = Math.PI * 0.25;
+
+gui.add(camera.position, "y").min(-10).max(50).step(0.001);
+gui.add(camera.position, "x").min(-10).max(50).step(0.001);
+gui.add(camera.position, "z").min(-10).max(50).step(0.001);
+
 scene.add(camera);
 
 // Controls
@@ -95,29 +163,14 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 const board = createBoard();
 scene.add(board);
 
-console.log(board);
-
-for (let i = 0; i < 8; i++) {
-  const whitePawn = createPawn("white");
-  console.log({ i });
-  scene.add(whitePawn);
-  whitePawn.position.x = board.children[8 + i].position.x;
-  whitePawn.position.z = board.children[8 + i].position.z;
-}
-for (let i = 55; i > 47; i--) {
-  const whitePawn = createPawn("black");
-  console.log({ i });
-  scene.add(whitePawn);
-  whitePawn.position.x = board.children[i].position.x;
-  whitePawn.position.z = board.children[i].position.z;
-}
-
 const { whitePeices, blackPeices } = createPeices(board, scene);
-
+//camera.lookAt(board);
 /**
  * Animate
  */
